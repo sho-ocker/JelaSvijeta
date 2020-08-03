@@ -59,13 +59,13 @@ class All extends Controller
 
 
     $validator = Validator::make($request->all(), [
-      'per_page' => 'nullable',
-      'page' => 'nullable',
-      'category' => 'nullable',
-      'tags' => 'nullable',
-      'with' => 'nullable',
-      'lang' => 'required',
-      'diff_time' => 'nullable'
+      'per_page' => 'nullable|integer',
+      'page' => 'nullable|integer',
+    //  'category' => 'nullable',
+      'tags' => 'nullable|ends_with:1,2,3|starts_with:1,2,3',
+      'with' => 'nullable|ends_with:categories,tags,ingredients|starts_with:categories,tags,ingredients',
+      'lang' => 'required|size:2|alpha',
+      'diff_time' => 'nullable|integer'
     ]);
 
     if ($validator->fails()) {
@@ -80,8 +80,8 @@ class All extends Controller
   //  $from_time = strtotime("1970-1-1 00:00:00");
     
     $diff_time = $request->query('diff_time');          
-    print_r('diff_time: '.$diff_time);
-    echo '<br>';
+   // print_r('diff_time: '.$diff_time);
+   // echo '<br>';
 
 
 
@@ -96,7 +96,7 @@ class All extends Controller
     
     
   //  $tags = json_decode($tags);
-    if($tags == null)
+    if($tags[0] == null)
     goto B;
 
 
@@ -107,7 +107,7 @@ class All extends Controller
         for($z=0; $z < sizeof($tags); $z++){
           for($k=0; $k < $pomm; $k++){
             if(($tags[$z]) == ($pomData[$i]->tags[$k]['id'])){
-              $data[$j++] = $pomData[$i];
+              $dataPrv[$j++] = $pomData[$i];
               $m++;
               break;  
             }
@@ -123,11 +123,43 @@ class All extends Controller
 
     
     B:
-    $data_kolicina = $j;
-    if($data_kolicina == 0 && $tags != null){
+    if($tags[0] == null){  
+      $dataPrv = Meal::all();
+      $data_kolicina = Meal::count();
+    }
+    else{
+      $data_kolicina = $j;
+    }
+   
+
+    if($diff_time == null){
+      $t=0;
+      for($i=0; $i < $data_kolicina; $i++){
+        if($dataPrv[$i]->deleted_at == null){
+            $data[$t++] = $dataPrv[$i];
+        }
+      }
+    }else{
+      $t=0;
+      for($i=0; $i < $data_kolicina; $i++){
+        if(strtotime($dataPrv[$i]->deleted_at) >= ($diff_time)){
+            $data[$t] = $dataPrv[$i];
+            $data[$t++]->status = "deleted";
+            
+        }
+        if(strtotime($dataPrv[$i]->created_at) >= ($diff_time) && $dataPrv[$i]->deleted_at == null){
+          $data[$t++] = $dataPrv[$i];
+        }
+      }
+    }
+
+
+    
+    $data_kolicina = $t;
+    if($data_kolicina == 0 && $tags[0] != null){
       echo 'Ne postoji Tag sa trazenim ID-em';
       exit;
-    }elseif($data_kolicina == 0 && $tags == NULL){
+    }elseif($data_kolicina == 0 && $tags[0] == NULL){
       $data_kolicina = sizeof($pomData);
       $data = $pomData;
     }
@@ -158,8 +190,8 @@ class All extends Controller
 
     $lang = $request->query('lang');                  //JEZIK
     setLocale(LC_ALL, $lang);
-    print_r('LANG: '.$lang);
-    echo '<br>';
+  //  print_r('LANG: '.$lang);
+   // echo '<br>';
   
 
 
@@ -236,27 +268,35 @@ class All extends Controller
     if($page == 1 || $page == 0){
       A:
       for($i=0; $i<$per_page; $i++){              	   //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
-            if($with[0] == null && strtotime($data[$i]->created_at) > $diff_time){
+            if($with[0] == null){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status']);
+              echo "<pre>"; 
               print_r(json_encode($pom[$i]));
+              echo "</pre>";
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 3 && strtotime($data[$i]->created_at) > $diff_time){
+            if(sizeof($with) == 3){
                 $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0], $with[1], $with[2]]);
-                print_r(json_encode($pom[$i]));
+                echo "<pre>"; 
+              print_r(json_encode($pom[$i]));
+              echo "</pre>";
                 echo '<br>';
                 echo '<br>';
             }
-            if(sizeof($with) == 2 && strtotime($data[$i]->created_at) > $diff_time){
+            if(sizeof($with) == 2){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status',$with[0], $with[1]]);
+              echo "<pre>"; 
               print_r(json_encode($pom[$i]));
+              echo "</pre>";
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 1 && $with[0] != null && strtotime($data[$i]->created_at) > $diff_time){
+            if(sizeof($with) == 1 && $with[0] != null){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0]]);
+              echo "<pre>"; 
               print_r(json_encode($pom[$i]));
+              echo "</pre>";
               echo '<br>';
               echo '<br>';
             }
@@ -270,25 +310,25 @@ class All extends Controller
       for($br = 2; $br<$totalPages; $br++){
         if($page == $br){
           for($i=$per_page*($br-1); $i<$per_page*$br; $i++){              //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
-            if($with[0] == null && strtotime($data[$i]->created_at) > $diff_time){
+            if($with[0] == null){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status']);
               print_r(json_encode($pom[$i]));
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 3 && strtotime($data[$i]->created_at) > $diff_time){
+            if(sizeof($with) == 3){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0], $with[1], $with[2]]);
               print_r(json_encode($pom[$i]));
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 2 && strtotime($data[$i]->created_at) > $diff_time){
+            if(sizeof($with) == 2){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status',$with[0], $with[1]]);
               print_r(json_encode($pom[$i]));
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 1 && $with[0] != null && strtotime($data[$i]->created_at) > $diff_time){
+            if(sizeof($with) == 1 && $with[0] != null){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0]]);
               print_r(json_encode($pom[$i]));
               echo '<br>';
