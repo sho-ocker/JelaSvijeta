@@ -110,6 +110,17 @@ class MealSeeder extends Seeder
                         ]);
                     }
 
+                    $time1 = random_int(1970, 2020);
+                    $ttt = random_int(1,5);
+                    if($ttt == 1){
+                        $time2 = random_int(1970, 2020)."-08-03 11:39:10";
+                        while($time2 <= $time1)
+                            $time2 = random_int(1970, 2020)."-08-03 11:39:10";
+                    }else
+                        $time2 = null;
+                    
+
+                    
 
                     DB::table('meals')->insert([
                     'title' => 'Naslov jela na HRV jeziku',
@@ -120,7 +131,9 @@ class MealSeeder extends Seeder
                         'slug' => 'category-'.$r,
                     ]),
                     'tags' => json_encode($tago), 
-                    'ingredients' => json_encode($ingo)
+                    'ingredients' => json_encode($ingo),
+                    'created_at' => $time1."-08-03 11:39:10",     
+                    'deleted_at' => $time2,     
                     ]); 
             }
             else{   
@@ -206,12 +219,24 @@ class MealSeeder extends Seeder
                 }
 
 
+                $time1 = random_int(1970, 2020);
+                $ttt = random_int(1,5);
+                if($ttt == 1){
+                    $time2 = random_int(1970, 2020)."-08-03 11:39:10";
+                    while($time2 <= $time1)
+                        $time2 = random_int(1970, 2020)."-08-03 11:39:10";
+                }else
+                    $time2 = null;
+
+
                     DB::table('meals')->insert([
                         'title' => 'Naslov jela na HRV jeziku',
                         'description' => 'Opis jela na HRV jeziku',
                         'category' => json_encode(null),
                         'tags' => json_encode($tago),
-                        'ingredients' => json_encode($ingo)
+                        'ingredients' => json_encode($ingo),
+                        'created_at' => $time1."-08-03 11:39:10",     
+                        'deleted_at' => $time2, 
                         ]);
             }  
 
@@ -244,6 +269,7 @@ class MealSeeder extends Seeder
                     'ingredients' => json_encode(null)
                     ]); 
             }   */
+
         }
     }
 }

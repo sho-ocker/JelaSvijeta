@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
 
 
 class CreateMealsTable extends Migration
@@ -23,9 +25,13 @@ class CreateMealsTable extends Migration
             $table->json('tags');                               //1 ili vise tagova
             $table->json('ingredients');                        //1 ili vise sastojaka
             
+            $table->timestamp('created_at');
+            $table->timestamp('updated_at')->useCurrent();
+            $table->softDeletes('deleted_at');
+            
         });
 
-        Schema::create('meals_translations', function (Blueprint $table) {
+        /* Schema::create('meals_translations', function (Blueprint $table) {
             $table->id();
             $table->integer('meal_id')->unsigned();
             $table->string('locale')->index();
@@ -36,7 +42,7 @@ class CreateMealsTable extends Migration
 
             $table->unique(['meal_id', 'locale']);
             $table->foreign('meal_id')->references('id')->on('meals')->onDelete('cascade');
-        });
+        }); */
     }
     
 

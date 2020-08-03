@@ -77,6 +77,14 @@ class All extends Controller
 
 
 
+  //  $from_time = strtotime("1970-1-1 00:00:00");
+    
+    $diff_time = $request->query('diff_time');          
+    print_r('diff_time: '.$diff_time);
+    echo '<br>';
+
+
+
     $page = $request->query('page');   
     
 
@@ -93,7 +101,7 @@ class All extends Controller
 
 
     $j=0;$m=0;
-    for($i=0; $i < $data_kolicina; $i++){
+    for($i=0; $i < $data_kolicina; $i++){                     //ISPITIVANJE TAGGOVA
       $m=0;
       $pomm = sizeof(($pomData[$i]->tags));             
         for($z=0; $z < sizeof($tags); $z++){
@@ -137,7 +145,7 @@ class All extends Controller
     }
 
     echo '<br>';
-    print_r('totalItems: '.$data_kolicina);
+    print_r('totalItems: '.$data_kolicina);             //GORNJE VARIJABLE
     echo '<br>';
     if($per_page !=0){
       print_r('itemsPerPage: '.$per_page);
@@ -146,7 +154,9 @@ class All extends Controller
     }
     echo '<br>';
 
-    $lang = $request->query('lang');
+
+
+    $lang = $request->query('lang');                  //JEZIK
     setLocale(LC_ALL, $lang);
     print_r('LANG: '.$lang);
     echo '<br>';
@@ -158,7 +168,6 @@ class All extends Controller
     echo 'TAGS == NULL'; 
 
     $diff_time = $request->query('diff_time');
-    $page = $request->query('page');
     print_r('diff_time: '.$diff_time);
     echo '<br>';
     */
@@ -227,25 +236,25 @@ class All extends Controller
     if($page == 1 || $page == 0){
       A:
       for($i=0; $i<$per_page; $i++){              	   //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
-            if($with[0] == null){
+            if($with[0] == null && strtotime($data[$i]->created_at) > $diff_time){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status']);
               print_r(json_encode($pom[$i]));
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 3 ){
+            if(sizeof($with) == 3 && strtotime($data[$i]->created_at) > $diff_time){
                 $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0], $with[1], $with[2]]);
                 print_r(json_encode($pom[$i]));
                 echo '<br>';
                 echo '<br>';
             }
-            if(sizeof($with) == 2){
+            if(sizeof($with) == 2 && strtotime($data[$i]->created_at) > $diff_time){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status',$with[0], $with[1]]);
               print_r(json_encode($pom[$i]));
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 1 && $with[0] != null){
+            if(sizeof($with) == 1 && $with[0] != null && strtotime($data[$i]->created_at) > $diff_time){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0]]);
               print_r(json_encode($pom[$i]));
               echo '<br>';
@@ -261,25 +270,25 @@ class All extends Controller
       for($br = 2; $br<$totalPages; $br++){
         if($page == $br){
           for($i=$per_page*($br-1); $i<$per_page*$br; $i++){              //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
-            if($with[0] == null){
+            if($with[0] == null && strtotime($data[$i]->created_at) > $diff_time){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status']);
               print_r(json_encode($pom[$i]));
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 3 ){
+            if(sizeof($with) == 3 && strtotime($data[$i]->created_at) > $diff_time){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0], $with[1], $with[2]]);
               print_r(json_encode($pom[$i]));
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 2){
+            if(sizeof($with) == 2 && strtotime($data[$i]->created_at) > $diff_time){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status',$with[0], $with[1]]);
               print_r(json_encode($pom[$i]));
               echo '<br>';
               echo '<br>';
             }
-            if(sizeof($with) == 1 && $with[0] != null){
+            if(sizeof($with) == 1 && $with[0] != null && strtotime($data[$i]->created_at) > $diff_time){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0]]);
               print_r(json_encode($pom[$i]));
               echo '<br>';
@@ -294,25 +303,25 @@ class All extends Controller
 
     if($page == $totalPages && $page!=1){
       for($i=$per_page*($page-1); $i<$data_kolicina; $i++){              //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
-        if($with[0] == null){
+        if($with[0] == null && strtotime($data[$i]->created_at) > $diff_time){
           $pom[$i] = $data[$i]->only(['id', 'title', 'description','status']);
           print_r(json_encode($pom[$i]));
           echo '<br>';
           echo '<br>';
         }      
-        if(sizeof($with) == 3 ){
+        if(sizeof($with) == 3 && strtotime($data[$i]->created_at) > $diff_time){
           $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0], $with[1], $with[2]]);
           print_r(json_encode($pom[$i]));
           echo '<br>';
           echo '<br>';
         }
-        if(sizeof($with) == 2){
+        if(sizeof($with) == 2 && strtotime($data[$i]->created_at) > $diff_time){
           $pom[$i] = $data[$i]->only(['id', 'title', 'description','status',$with[0], $with[1]]);
           print_r(json_encode($pom[$i]));
           echo '<br>';
           echo '<br>';
         }
-        if(sizeof($with) == 1 && $with[0] != null){
+        if(sizeof($with) == 1 && $with[0] != null && strtotime($data[$i]->created_at) > $diff_time){
           $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0]]);
           print_r(json_encode($pom[$i]));
           echo '<br>';

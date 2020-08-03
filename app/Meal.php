@@ -8,9 +8,12 @@ class Meal extends Model
 {
     protected $table = "meals";
 
-    public $translatedAttributes = [
+    public $timestamps = false;
+
+
+    /* public $translatedAttributes = [
         'title', 'description', 'status',
-    ];
+    ]; */
 
     protected $casts = [
         'category' => 'array',
