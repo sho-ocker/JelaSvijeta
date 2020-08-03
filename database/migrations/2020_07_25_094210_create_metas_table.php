@@ -17,7 +17,7 @@ class CreateMetasTable extends Migration
             $table->integer('currentPage');
             $table->integer('totalItems');
             $table->integer('itemsPerPage');
-            $table->integer('totalPages')->default(2);
+            $table->integer('totalPages');
         });
     }
 

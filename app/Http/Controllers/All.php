@@ -54,19 +54,8 @@ class All extends Controller
 
 
   public function show(Request $request){
-/* 
-   $validator = $request->validate([
-      'per_page' => 'nullable',
-      'page' => 'nullable',
-      'category' => 'nullable',
-      'tags' => 'nullable',
-      'with' => 'nullable',
-      'lang' => 'required',
-      'diff_time' => 'nullable'
-    ]);  */
 
     $pomData = Meal::all();
-
 
 
     $validator = Validator::make($request->all(), [
@@ -88,27 +77,44 @@ class All extends Controller
 
 
 
-
     $page = $request->query('page');   
     
 
     $data_kolicina = Meal::count();
 
     $tags = $request->query('tags');
-   // print_r('tags: '.$tags);
+    $tags = explode(',', $tags);                   //string to array
 
-
-    $j=0;
-    for($i=0; $i<$data_kolicina; $i++){
-      if($tags == $pomData[$i]->tags->id){
-        $data[$j++] = $pomData[$i];
-      }
-      else{
-        continue;
-      }
-    }
     
+    
+  //  $tags = json_decode($tags);
+    if($tags == null)
+    goto B;
 
+
+    $j=0;$m=0;
+    for($i=0; $i < $data_kolicina; $i++){
+      $m=0;
+      $pomm = sizeof(($pomData[$i]->tags));             
+        for($z=0; $z < sizeof($tags); $z++){
+          for($k=0; $k < $pomm; $k++){
+            if(($tags[$z]) == ($pomData[$i]->tags[$k]['id'])){
+              $data[$j++] = $pomData[$i];
+              $m++;
+              break;  
+            }
+            else{
+              continue;
+            }  
+          }
+          if($m > 0)
+            break;  
+        }
+                     
+    }
+
+    
+    B:
     $data_kolicina = $j;
     if($data_kolicina == 0 && $tags != null){
       echo 'Ne postoji Tag sa trazenim ID-em';
@@ -139,31 +145,24 @@ class All extends Controller
       print_r('itemsPerPage: '.$data_kolicina);
     }
     echo '<br>';
-    
 
-   /*  if($tags == null)
-      echo 'TAGS == NULL'; */
-
-    /* $per_page = $request->query('per_page');
-    $with = $request->query('with');
-    $tags = $request->query('tags');
     $lang = $request->query('lang');
+    setLocale(LC_ALL, $lang);
+    print_r('LANG: '.$lang);
+    echo '<br>';
+  
+
+
+
+ /* if($tags == null)
+    echo 'TAGS == NULL'; 
+
     $diff_time = $request->query('diff_time');
     $page = $request->query('page');
-
-    print_r('per page: '.$per_page);
-    echo '<br>';
-    print_r('tags: '.$tags);
-    echo '<br>';
-    print_r('lang: '.$lang);
-    echo '<br>';
-    print_r('with: '.$with);
-    echo '<br>';
     print_r('diff_time: '.$diff_time);
     echo '<br>';
-    print_r('page: '.$page);
-    echo '<br>'; */
-
+    */
+ 
     
   
     $data_ispis = $data_kolicina - $per_page;
@@ -176,29 +175,6 @@ class All extends Controller
 
 
 
-
-
-    /* foreach($with as $w){
-      print_r('with: '.$w);
-      echo '<br>';
-    }
-    echo sizeof($with);
-    echo '<br>'; */
-
-
-   /*  $he = $data[0]->tags->id; 
-    echo $he;
-
-
-    echo '<br>';
-    echo '<br>';
-    echo '<br>';
-
-    echo $tags;
-
-    echo '<br>';
-    echo '<br>';
-    echo '<br>'; */
 
     if($per_page==0 && $page==0){
       $totalPages= 1;
@@ -313,6 +289,8 @@ class All extends Controller
         }
       }
     }
+
+    
 
     if($page == $totalPages && $page!=1){
       for($i=$per_page*($page-1); $i<$data_kolicina; $i++){              //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)

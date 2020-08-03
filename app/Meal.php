@@ -13,9 +13,9 @@ class Meal extends Model
     ];
 
     protected $casts = [
-        'category' => 'object',
-        'tags' => 'object',
-        'ingredients' => 'object'
+        'category' => 'array',
+        'tags' => 'array',
+        'ingredients' => 'array'
     ];
 }
  

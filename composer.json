@@ -14,6 +14,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "fzaninotto/faker": "^1.9",
         "guzzlehttp/guzzle": "^6.3",
+        "jzonta/faker-restaurant": "^1.1",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0"
     },

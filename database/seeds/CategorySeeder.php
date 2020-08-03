@@ -17,6 +17,6 @@ class CategorySeeder extends Seeder
                 'title' => 'Naslov kategorije '.($i+1).' na HRV jeziku',
                 'slug' => 'category-'.($i+1),
             ]);
-        }
+        } 
     }
 }

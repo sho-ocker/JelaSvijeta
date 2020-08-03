@@ -38,6 +38,8 @@ class CreateMealsTable extends Migration
             $table->foreign('meal_id')->references('id')->on('meals')->onDelete('cascade');
         });
     }
+    
+
 
     /**
      * Reverse the migrations.
