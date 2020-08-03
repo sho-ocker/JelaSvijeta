@@ -6,6 +6,7 @@ use App\Category;
 use Illuminate\Http\Request;
 use App\Meal;           //<----------------
 use App\Meta;
+use App\Ispis;
 use Illuminate\Http\JsonResponse;
 use PhpParser\Node\Expr\Cast\Int_;
 use Illuminate\Support\Facades\DB;
@@ -170,21 +171,22 @@ class All extends Controller
 
     
 
-    if($page != 0){
+   /*  if($page != 0){
       print_r('currentPage: '.$page);
     }else{
       print_r('currentPage: 1');
-    }
+    } */
 
-    echo '<br>';
+    /* echo '<br>';
     print_r('totalItems: '.$data_kolicina);             //GORNJE VARIJABLE
-    echo '<br>';
+    echo '<br>'; */
     if($per_page !=0){
-      print_r('itemsPerPage: '.$per_page);
+   //   print_r('itemsPerPage: '.$per_page);
     }else{
-      print_r('itemsPerPage: '.$data_kolicina);
+     // print_r('itemsPerPage: '.$data_kolicina);
     }
-    echo '<br>';
+    //echo '<br>';
+
 
 
 
@@ -214,22 +216,26 @@ class All extends Controller
     $with = $request->query('with');
     $with = explode(',', $with);                   //string to array
 
+    $ispis = new Ispis;
 
 
 
     if($per_page==0 && $page==0){
       $totalPages= 1;
-      print_r('totalPages: 1');
+      /* print_r('totalPages: 1');
       echo '<br>';
       echo '<br>';
       echo '<br>';
       echo '<br>';
       echo '<br>';
-      echo '<br>';
+      echo '<br>'; */
       for($i=0; $i<$data_kolicina; $i++){              	   //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
-           print_r(json_encode($data[$i]));
-          echo '<br>';
-          echo '<br>';
+          $ispis->data = $data;
+          echo "<pre>"; 
+          echo json_encode($data[$i], JSON_PRETTY_PRINT);
+          echo "</pre>"; 
+          /* echo '<br>';
+          echo '<br>'; */
       }
       goto A;
     }elseif($per_page != 0){
@@ -244,13 +250,13 @@ class All extends Controller
       $per_page = $data_kolicina;
     }
     
-    print_r('totalPages: '.(int)($totalPages));
+    /* print_r('totalPages: '.(int)($totalPages));
     echo '<br>';
     echo '<br>';
     echo '<br>';
     echo '<br>';
     echo '<br>';
-    echo '<br>';
+    echo '<br>'; */
 
 
     if($page == 0)
@@ -262,6 +268,14 @@ class All extends Controller
 
    
 
+
+    $polje1['currentPage'] = $page;
+    $polje1['totalItems'] = $data_kolicina;
+    $polje1['itemsPerPage'] = $per_page;
+    $polje1['totalPages'] = $totalPages;
+    $ispis->meta = $polje1;
+
+
     
 
     $uk=0;
@@ -270,35 +284,39 @@ class All extends Controller
       for($i=0; $i<$per_page; $i++){              	   //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
             if($with[0] == null){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status']);
-              echo "<pre>"; 
-              print_r(json_encode($pom[$i]));
+              $polje3[$i] = $pom[$i];
+              /* echo "<pre>"; 
+              echo json_encode($pom[$i], JSON_PRETTY_PRINT);
               echo "</pre>";
               echo '<br>';
-              echo '<br>';
+              echo '<br>'; */
             }
             if(sizeof($with) == 3){
                 $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0], $with[1], $with[2]]);
-                echo "<pre>"; 
-              print_r(json_encode($pom[$i]));
+                $polje3[$i] = $pom[$i];
+               /*  echo "<pre>"; 
+              echo json_encode($pom[$i], JSON_PRETTY_PRINT);
               echo "</pre>";
                 echo '<br>';
-                echo '<br>';
+                echo '<br>'; */
             }
             if(sizeof($with) == 2){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status',$with[0], $with[1]]);
-              echo "<pre>"; 
-              print_r(json_encode($pom[$i]));
+              $polje3[$i] = $pom[$i];
+              /* echo "<pre>"; 
+              echo json_encode($pom[$i], JSON_PRETTY_PRINT);
               echo "</pre>";
               echo '<br>';
-              echo '<br>';
+              echo '<br>'; */
             }
             if(sizeof($with) == 1 && $with[0] != null){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0]]);
-              echo "<pre>"; 
-              print_r(json_encode($pom[$i]));
+              $polje3[$i] = $pom[$i];
+              /* echo "<pre>"; 
+              echo json_encode($pom[$i], JSON_PRETTY_PRINT);
               echo "</pre>";
               echo '<br>';
-              echo '<br>';
+              echo '<br>'; */
             }
             if($data_kolicina == ++$uk)
               break;
@@ -312,27 +330,31 @@ class All extends Controller
           for($i=$per_page*($br-1); $i<$per_page*$br; $i++){              //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
             if($with[0] == null){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status']);
-              print_r(json_encode($pom[$i]));
+              $polje3[$i] = $pom[$i];
+             /*  echo json_encode($pom[$i], JSON_PRETTY_PRINT);
               echo '<br>';
-              echo '<br>';
+              echo '<br>'; */
             }
             if(sizeof($with) == 3){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0], $with[1], $with[2]]);
-              print_r(json_encode($pom[$i]));
+              $polje3[$i] = $pom[$i];
+             /*  echo json_encode($pom[$i], JSON_PRETTY_PRINT);
               echo '<br>';
-              echo '<br>';
+              echo '<br>'; */
             }
             if(sizeof($with) == 2){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status',$with[0], $with[1]]);
-              print_r(json_encode($pom[$i]));
+              $polje3[$i] = $pom[$i];
+             /*  echo json_encode($pom[$i], JSON_PRETTY_PRINT);
               echo '<br>';
-              echo '<br>';
+              echo '<br>'; */
             }
             if(sizeof($with) == 1 && $with[0] != null){
               $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0]]);
-              print_r(json_encode($pom[$i]));
+              $polje3[$i] = $pom[$i];
+             /*  echo json_encode($pom[$i], JSON_PRETTY_PRINT);
               echo '<br>';
-              echo '<br>';
+              echo '<br>'; */
             }
           }
         }
@@ -345,110 +367,167 @@ class All extends Controller
       for($i=$per_page*($page-1); $i<$data_kolicina; $i++){              //ispis stranice (npr. per_page 5 na page 2 sa total_items 9)
         if($with[0] == null && strtotime($data[$i]->created_at) > $diff_time){
           $pom[$i] = $data[$i]->only(['id', 'title', 'description','status']);
-          print_r(json_encode($pom[$i]));
+          $polje3[$i] = $pom[$i];
+          /* echo json_encode($pom[$i], JSON_PRETTY_PRINT);
           echo '<br>';
-          echo '<br>';
+          echo '<br>'; */
         }      
         if(sizeof($with) == 3 && strtotime($data[$i]->created_at) > $diff_time){
           $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0], $with[1], $with[2]]);
-          print_r(json_encode($pom[$i]));
+          $polje3[$i] = $pom[$i];
+          /* echo json_encode($pom[$i], JSON_PRETTY_PRINT);
           echo '<br>';
-          echo '<br>';
+          echo '<br>'; */
         }
         if(sizeof($with) == 2 && strtotime($data[$i]->created_at) > $diff_time){
           $pom[$i] = $data[$i]->only(['id', 'title', 'description','status',$with[0], $with[1]]);
-          print_r(json_encode($pom[$i]));
+          $polje3[$i] = $pom[$i];
+          /* echo json_encode($pom[$i], JSON_PRETTY_PRINT);
           echo '<br>';
-          echo '<br>';
+          echo '<br>'; */
         }
         if(sizeof($with) == 1 && $with[0] != null && strtotime($data[$i]->created_at) > $diff_time){
           $pom[$i] = $data[$i]->only(['id', 'title', 'description','status', $with[0]]);
-          print_r(json_encode($pom[$i]));
+          $polje3[$i] = $pom[$i];
+          /* echo json_encode($pom[$i], JSON_PRETTY_PRINT);
           echo '<br>';
-          echo '<br>';
+          echo '<br>'; */
         }
       }
     }
 
-
+    $ispis->data = $polje3;
 
     $pr = $request->query('page');
- /*    echo 'PR : '.$pr;
-    echo '<br>';
 
-    echo 'PAGE : '.$page;
-    echo '<br>';
-    echo '<br>';
-    echo '<br>';  */
 
+   /*  echo '<br>';
     echo '<br>';
     echo '<br>';
-    echo '<br>';
-    echo '<br>';
+    echo '<br>'; */
+
+
     
     if($pr != 0){
       
       $prev_link = $request->fullUrl();
       $prev_link = Str::replaceFirst('page='.$pr,'page='.($pr-1), $prev_link);
       if($pr==1){
-        echo 'prev: null';
-        echo '<br>';
+        $polje2['prev'] = null;
+       /*  echo 'prev: null';
+        echo '<br>'; */
       }
       else{
-        echo 'prev: ';
+        $polje2['prev'] = $prev_link;
+        /* echo 'prev: ';
         echo $prev_link;
-        echo '<br>';
+        echo '<br>'; */
       }
       $next_link = $request->fullUrl();
       $next_link = Str::replaceFirst('page='.$pr,'page='.($pr+1), $next_link);
 
       if($pr==$totalPages){
-        echo 'next: null';
-        echo '<br>';
+        $polje2['next'] = null;
+        /* echo 'next: null';
+        echo '<br>'; */
       }else{
-        echo 'next: ';
+        $polje2['next'] = $next_link;
+        /* echo 'next: ';
         echo $next_link;
-        echo '<br>';
+        echo '<br>'; */
       }
       $self = $request->fullUrl();
-      echo 'self: ';
+      $polje2['self'] = $self;
+      /* echo 'self: ';
       echo $self;
-      echo '<br>';
+      echo '<br>'; */
     }
 
 
     else{
       $prev_link = $request->fullUrl();
       if($page == 1 || $page == 0){
-        echo 'prev: null';
-        echo '<br>';
+        $polje2['prev'] = null;
+       /*  echo 'prev: null';
+        echo '<br>'; */
       }
       else{
-        echo 'prev: ';
+        $polje2['prev'] = $prev_link;
+        /* echo 'prev: ';
         echo $prev_link;
-        echo '<br>';
+        echo '<br>'; */
       }
       $next_link = $request->fullUrl();
 
       if($page==$totalPages){
-        echo 'next: null';
-        echo '<br>';
+        $polje2['next'] = null;
+        /* echo 'next: null';
+        echo '<br>'; */
       }else{
-        echo 'next: ';
+        $polje2['next'] = $next_link.'&page='.($page+1);
+        /* echo 'next: ';
         echo $next_link.'&page='.($page+1);
-        echo '<br>';
+        echo '<br>'; */
       }
       $self = $request->fullUrl();
-      echo 'self: ';
+      $polje2['self'] = $self.'&page='.$page;
+      /* echo 'self: ';
       echo $self.'&page='.$page;
-      echo '<br>';
+      echo '<br>'; */
     }
     
+  /*     $polje2['self'] = Str::replaceLast('127.0.0.1:8000', 'localhost',$polje2['self']);
+      $polje2['next'] = Str::replaceLast('127.0.0.1:8000', 'localhost',$polje2['next']);
+      $polje2['prev'] = Str::replaceLast('127.0.0.1:8000', 'localhost',$polje2['prev']); */
+
+
+    $ispis->links = $polje2;
+    
+
+
+  /*    $ispis = new Ispis;
+    $ispis->data = $data;
+    $ispis->meta['currentPage'] = $page; */
  
+    /* $ispis = Ispis::create([
+       'meta' => json_encode([
+        'currentPage' => $page,
+        'totalItems' => $data_kolicina,
+        'itemsPerPage' => $per_page,
+        'totalPages' => $totalPages,
+      ]), 
+      'data' => json_encode($data),
+       'links' => json_encode([
+        'prev' => $prev_link,
+        'next' => $next_link,
+        'self' => $self,
+      ]) 
+    ]); */
 
 
+    /* $ispis = new Ispis;
+    $polje1['currentPage'] = $page;
+    $polje1['totalItems'] = $data_kolicina;
+    $polje1['itemsPerPage'] = $per_page;
+    $polje1['totalPages'] = $totalPages;
 
-  }
+    $polje2['prev'] = $prev_link;
+    $polje2['next'] = $next_link;
+    $polje2['self'] = $self; */
+    
+  
+   // $ispis->data = $data;
+    
+
+    /* echo '<br>';
+    echo '<br>';
+    echo '<br>'; */
+    echo "<pre>";
+    echo json_encode($ispis, JSON_PRETTY_PRINT); 
+    echo "</pre>";
+
+
+}
 
 
 
