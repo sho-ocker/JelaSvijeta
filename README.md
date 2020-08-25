@@ -255,7 +255,7 @@ U nastavku je pojašnjenje strukture ostalih objekata.
         • <b>title</b> - naziv kategorije ovisno o parametru lang</br>
         • <b>slug</b> - tekstualna unique oznaka kategorije koja ne ovisi o prijevodu</br>
 <b><h3>Tags</h3></b></br>
-        • <b>id</b> - <b>id taga</br>
+        • <b>id</b> - id taga</br>
         • <b>title</b> - naziv taga ovisno o parametru lang</br>
         • <b>slug</b> - tekstualna unique oznaka taga koja ne ovisi o prijevodu</br>
 <b><h3>Ingredients</h3></b></br>
