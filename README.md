@@ -31,13 +31,13 @@ Potrebno je napraviti validaciju svih parametara requesta po kojima ce se filtri
 __________________
 
 Želimo imati kontrolu nad:</br>
-        • per_page - (optional) Broj rezultata po stranici</br>
-        • page - (optional) broj stranice</br>
-        • category - (optional) id kategorije po kojoj želimo filtrirati rezultate; osim id, ovaj parametar može imati vrijednost NULL (gdje ne postoji kategorija) kao i vrijednost !NULL (gdje postoji kategorija)</br>
-        • tags - (optional) lista id-jeva po kojima želimo filtrirati rezultate (npr, tags=1,2,3). Vratiti samo jela koja imaju sve navedene tagove.</br>
-        • with - (optional) lista ključnih riječi (ingredients, category, tags) s kojima dajemo do znanja koje dodatne podatke očekujemo u responsu</br>
-        • lang - (required) parametar kojim definiramo jezik</br>
-        • diff_time - (optional) UNIX Timestamp; kad je ovaj parametar proslijeđen tad je potrebno vratiti sve iteme (i one obrisane). Treba vratiti sve ne samo izmjenjene nakon datuma proslijeđenog u ovom parametru *
+        • <b>per_page</b> - (optional) Broj rezultata po stranici</br>
+        • <b>page</b> - (optional) broj stranice</br>
+        • <b>category</b> - (optional) id kategorije po kojoj želimo filtrirati rezultate; osim id, ovaj parametar može imati vrijednost NULL (gdje ne postoji kategorija) kao i vrijednost !NULL (gdje postoji kategorija)</br>
+        • <b>tags</b> - (optional) lista id-jeva po kojima želimo filtrirati rezultate (npr, tags=1,2,3). Vratiti samo jela koja imaju sve navedene tagove.</br>
+        • <b>with</b> - (optional) lista ključnih riječi (ingredients, category, tags) s kojima dajemo do znanja koje dodatne podatke očekujemo u responsu</br>
+        • <b>lang</b> - (required) parametar kojim definiramo jezik</br>
+        • <b>diff_time</b> - (optional) UNIX Timestamp; kad je ovaj parametar proslijeđen tad je potrebno vratiti sve iteme (i one obrisane). Treba vratiti sve ne samo izmjenjene nakon datuma proslijeđenog u ovom parametru *
 
         * S obzirom na to da nije predviđena kreacija, ažuriranje i brisanje, nije se potrebno posebno fokusirati na razradu ove funkcionalnosti, ono što je bitno je sljedeće: kada je u requestu poslan parametar diff_time i kada je to pozitivan cijeli broj veći od 0, tada je pri selektiranju podataka iz baze potrebno uzeti u obzir sva jela (uključujući i obrisana) koja su kreirana, modificirana ili obrisana nakon datuma definiranog u tom parametru
 
@@ -240,10 +240,10 @@ Ovdje se nalazi primjer responsa koji odgovara URL queryu:
 __________________________________________________________________________________________________________________________
 
 Pojašnjenje nekih podataka iz responsa:</br>
-        • id - id jela iz tablice meals</br>
-        • title - naziv jela iz tablice prijevoda za jelo ovisno o parametru lang</br>
-        • description - opis jela iz tablice prijevoda za jelo ovisno o parametru lang</br>
-        • status - zadana vrijednost je ‘created’ osim ako je u requestu proslijeđen parametar diff_time, tada status može biti jedan od created, modified, deleted ovisno o tome dali je vraćeno jelo bilo kreirano, modificirano ili obrisano nakon vremena definiranog u parametru diff_time. Manipulaciju status potrebno je izvesti putem time stampa created_at, updated_at i deleted_at (prouciti Laravel Eloquent SoftDeletes).</br>
+        • <b>id</b> - id jela iz tablice meals</br>
+        • <b>title</b> - naziv jela iz tablice prijevoda za jelo ovisno o parametru lang</br>
+        • <b>description</b> - opis jela iz tablice prijevoda za jelo ovisno o parametru lang</br>
+        • <b>status</b> - zadana vrijednost je ‘created’ osim ako je u requestu proslijeđen parametar diff_time, tada status može biti jedan od created, modified, deleted ovisno o tome dali je vraćeno jelo bilo kreirano, modificirano ili obrisano nakon vremena definiranog u parametru diff_time. Manipulaciju status potrebno je izvesti putem time stampa created_at, updated_at i deleted_at (prouciti Laravel Eloquent SoftDeletes).</br>
 
 Ovi gore spomenuti property definiraju osnovnu shemu responsa; međutim shemu responsa je moguće promijeniti (proširiti) tako da se pošalje jedan ili više ključnih riječi u parametar with, tada se u responsu na svakom objektu još mogu pojaviti i property tags, category ili/i ingredients.
 
@@ -251,14 +251,14 @@ Ovi gore spomenuti property definiraju osnovnu shemu responsa; međutim shemu re
 U nastavku je pojašnjenje strukture ostalih objekata.
 
 <b><h3>Category</h3></b></br>
-        • id - id kategorije</br>
-        • title - naziv kategorije ovisno o parametru lang</br>
-        • slug - tekstualna unique oznaka kategorije koja ne ovisi o prijevodu</br>
+        • <b>id</b> - id kategorije</br>
+        • <b>title</b> - naziv kategorije ovisno o parametru lang</br>
+        • <b>slug</b> - tekstualna unique oznaka kategorije koja ne ovisi o prijevodu</br>
 <b><h3>Tags</h3></b></br>
-        • id - id taga</br>
-        • title - naziv taga ovisno o parametru lang</br>
-        • slug - tekstualna unique oznaka taga koja ne ovisi o prijevodu</br>
+        • <b>id</b> - <b>id taga</br>
+        • <b>title</b> - naziv taga ovisno o parametru lang</br>
+        • <b>slug</b> - tekstualna unique oznaka taga koja ne ovisi o prijevodu</br>
 <b><h3>Ingredients</h3></b></br>
-        • id - id sastojka</br>
-        • title - naziv sastojka ovisno o parametru lang</br>
-        • slug - tekstualna unique oznaka sastojka koja ne ovisi o prijevodu</br>
+        • <b>id</b> - id sastojka</br>
+        • <b>title</b> - naziv sastojka ovisno o parametru lang</br>
+        • <b>slug</b> - tekstualna unique oznaka sastojka koja ne ovisi o prijevodu</br>
