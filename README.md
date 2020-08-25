@@ -49,7 +49,7 @@ Ovdje se nalazi primjer responsa koji odgovara URL queryu:
 
 ...?per_page=5&tags=2&lang=hr&with=ingredients,category,tags&diff_time=1493902343&page=2
 
-
+<pre>
 {
     "meta": {
         "currentPage": 1,
@@ -104,7 +104,7 @@ Ovdje se nalazi primjer responsa koji odgovara URL queryu:
         "prev": null,
         "next": null,
         "self": "http:\/\/127.0.0.1:8000\/meals?lang=hr&page=1&per_page=5&tags=2%2C3&with=ingredients%2Ccategory%2Ctags"
-
+</pre>
 __________________________________________________________________________________________________________________________
 
 Pojašnjenje nekih podataka iz responsa:</br>
