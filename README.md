@@ -1,85 +1,64 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<b>Zadatak i ciljevi</b>
+__________________
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
-
-## About Laravel
+Potrebno je kreirati aplikaciju Jela svijeta koristeći Laravel framework (Verzija 5.0+). Ova aplikacija se sastoji od baze jela, sastojaka, kategorija i tagova. S obzirom da je aplikacija višejezična, jela, sastojci, kategorije i tagovi imaju tablice prijevoda. Također postoji i tablica jezika u kojoj se nalaze dostupni jezici.
+Moguce koristiti Laravel Translatable paket https://github.com/Astrotomic/laravel-translatable
+Tablice je potrebno kreirati korištenjem migracija.
+Tablice se trebaju popuniti podatcima korištenjem seedera i paketa “Fzaninotto/faker”.
+Poželjno je koristiti “Dependency Injection”. 
+Cilj ovog zadatka je vidjeti koliko dobro kandidat poznaje laravel api, a pri rješavanju zadatka trebao bi se pridržavati “SOLID design principles”.
+Aplikacija treba imati jedan endpoint na kojem se trebaju izlistavati jela. Koji podatci se prikazuju i kako, ovisi o parametrima u query-ju. Pretpostavimo da sva jela imaju unesen isti broj prijevoda koji je identičan broju jezika u tablici languages.
+        • Jelo može biti bez kategorije, ili može pripadatati samo jednoj kategoriji
+        • Jelo mora imati definiran barem jedan tag
+        • Jelo mora imati definiran barem jedan sastojak
+Svi sastojci imaju isti broj prijevoda koji je identičan broju jezika u tablici languages.
+Potrebno je napraviti validaciju svih parametara requesta po kojima ce se filtrirati rezultati baze.
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<b>Request</b>
+__________________
 
-## Learning Laravel
+Želimo imati kontrolu nad:
+        • per_page - (optional) Broj rezultata po stranici
+        • page - (optional) broj stranice
+        • category - (optional) id kategorije po kojoj želimo filtrirati rezultate; osim id, ovaj parametar može imati vrijednost NULL (gdje ne postoji kategorija) kao i vrijednost !NULL (gdje postoji kategorija)
+        • tags - (optional) lista id-jeva po kojima želimo filtrirati rezultate (npr, tags=1,2,3). Vratiti samo jela koja imaju sve navedene tagove.
+        • with - (optional) lista ključnih riječi (ingredients, category, tags) s kojima dajemo do znanja koje dodatne podatke očekujemo u responsu
+        • lang - (required) parametar kojim definiramo jezik
+        • diff_time - (optional) UNIX Timestamp; kad je ovaj parametar proslijeđen tad je potrebno vratiti sve iteme (i one obrisane). Treba vratiti sve ne samo izmjenjene nakon datuma proslijeđenog u ovom parametru *
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+        * S obzirom na to da nije predviđena kreacija, ažuriranje i brisanje, nije se potrebno posebno fokusirati na razradu ove funkcionalnosti, ono što je bitno je sljedeće: kada je u requestu poslan parametar diff_time i kada je to pozitivan cijeli broj veći od 0, tada je pri selektiranju podataka iz baze potrebno uzeti u obzir sva jela (uključujući i obrisana) koja su kreirana, modificirana ili obrisana nakon datuma definiranog u tom parametru
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+<b>Response</b>
+__________________
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Ovdje se nalazi primjer responsa koji odgovara URL queryu:
 
-### Premium Partners
+...?per_page=5&tags=2&lang=hr&with=ingredients,category,tags&diff_time=1493902343&page=2
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
+Pojašnjenje nekih podataka iz responsa:
+        • id - id jela iz tablice meals
+        • title - naziv jela iz tablice prijevoda za jelo ovisno o parametru lang
+        • description - opis jela iz tablice prijevoda za jelo ovisno o parametru lang
+        • status - zadana vrijednost je ‘created’ osim ako je u requestu proslijeđen parametar diff_time, tada status može biti jedan od created, modified, deleted ovisno o tome dali je vraćeno jelo bilo kreirano, modificirano ili obrisano nakon vremena definiranog u parametru diff_time. Manipulaciju status potrebno je izvesti putem time stampa created_at, updated_at i deleted_at (prouciti Laravel Eloquent SoftDeletes).
 
-### Community Sponsors
+Ovi gore spomenuti property definiraju osnovnu shemu responsa; međutim shemu responsa je moguće promijeniti (proširiti) tako da se pošalje jedan ili više ključnih riječi u parametar with, tada se u responsu na svakom objektu još mogu pojaviti i property tags, category ili/i ingredients.
 
-<a href="https://op.gg"><img src="http://opgg-static.akamaized.net/icon/t.rectangle.png" width="150"></a>
 
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [云软科技](http://www.yunruan.ltd/)
+U nastavku je pojašnjenje strukture ostalih objekata.
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<b>Category</b>
+        • id - id kategorije
+        • title - naziv kategorije ovisno o parametru lang
+        • slug - tekstualna unique oznaka kategorije koja ne ovisi o prijevodu
+<b>Tags</b>
+        • id - id taga
+        • title - naziv taga ovisno o parametru lang
+        • slug - tekstualna unique oznaka taga koja ne ovisi o prijevodu
+<b>Ingredients</b>
+        • id - id sastojka
+        • title - naziv sastojka ovisno o parametru lang
+        • slug - tekstualna unique oznaka sastojka koja ne ovisi o prijevodu
