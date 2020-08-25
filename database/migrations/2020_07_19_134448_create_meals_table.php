@@ -18,31 +18,23 @@ class CreateMealsTable extends Migration
     {
         Schema::create('meals', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('description');
-            $table->string('status')->default('created');
-            $table->json('category');                           //0 ili 1 kategorija jela
-            $table->json('tags');                               //1 ili vise tagova
-            $table->json('ingredients');                        //1 ili vise sastojaka
-            
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at')->useCurrent();
-            $table->softDeletes('deleted_at');
-            
+            $table->integer('category_id')->unsigned()->nullable();
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->timestamps();
+            $table->softDeletes();
         });
 
-        /* Schema::create('meals_translations', function (Blueprint $table) {
+        Schema::create('meal_translations', function (Blueprint $table) {
             $table->id();
             $table->integer('meal_id')->unsigned();
             $table->string('locale')->index();
 
             $table->string('title');
             $table->string('description');
-            $table->string('status')->default('created');
 
             $table->unique(['meal_id', 'locale']);
             $table->foreign('meal_id')->references('id')->on('meals')->onDelete('cascade');
-        }); */
+        }); 
     }
     
 

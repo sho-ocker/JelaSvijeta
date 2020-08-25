@@ -1,5 +1,6 @@
 <?php
 
+use App\Ingredient;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -12,11 +13,6 @@ class IngredientSeeder extends Seeder
      */
     public function run()
     {
-        for($i=1; $i<10; $i++){
-            DB::table('ingredients')->insert([
-                'title' => 'Naslov sastojka '.$i,
-                'slug' => 'sastojak-'.$i,
-            ]);
-        }
+        factory(Ingredient::class, 10)->create();
     }
 }

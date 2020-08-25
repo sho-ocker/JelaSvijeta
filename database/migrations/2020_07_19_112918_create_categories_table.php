@@ -12,13 +12,22 @@ class CreateCategoriesTable extends Migration
      * @return void
      */
     public function up()
-    {
+    {   
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->string('slug');
+            $table->timestamps();
+        });
 
-            //$table->timestamps();
+        Schema::create('category_translations', function (Blueprint $table) {
+            $table->id();
+
+            $table->integer('category_id')->unsigned();
+            $table->string('locale')->index();
+            $table->string('title');
+
+            $table->unique(['category_id', 'locale']);
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,16 +21,8 @@ Route::get('/', function () {
 });
 
 
-Route::get("meals","All@show");         //<----- se koristi
+Route::get("meals", "All@index");
+ 
 
 
-
-
-//Route::get("/meals?per_page=5" , "All@link");          //->name('per_page'); imenovanje rute
-
-
-//Route::get("meals","All@index");
-
-
-//Route::get("mealsCheck","All@dbCheck");
 

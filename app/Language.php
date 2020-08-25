@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Meta extends Model
+class Language extends Model
 {
-    protected $table = "metas";
+    protected $fillable = ['lang'];
 }
