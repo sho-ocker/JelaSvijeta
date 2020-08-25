@@ -17,10 +17,10 @@ Cilj ovog zadatka je vidjeti koliko dobro kandidat poznaje laravel api, a pri rj
 
 Aplikacija treba imati jedan endpoint na kojem se trebaju izlistavati jela. Koji podatci se prikazuju i kako, ovisi o parametrima u query-ju.
 
-Pretpostavimo da sva jela imaju unesen isti broj prijevoda koji je identičan broju jezika u tablici languages.
-        • Jelo može biti bez kategorije, ili može pripadatati samo jednoj kategoriji
-        • Jelo mora imati definiran barem jedan tag
-        • Jelo mora imati definiran barem jedan sastojak
+Pretpostavimo da sva jela imaju unesen isti broj prijevoda koji je identičan broju jezika u tablici languages.</br>
+        • Jelo može biti bez kategorije, ili može pripadatati samo jednoj kategoriji</br>
+        • Jelo mora imati definiran barem jedan tag</br>
+        • Jelo mora imati definiran barem jedan sastojak</br>
 
 Svi sastojci imaju isti broj prijevoda koji je identičan broju jezika u tablici languages.
 Potrebno je napraviti validaciju svih parametara requesta po kojima ce se filtrirati rezultati baze.
