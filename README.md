@@ -49,6 +49,64 @@ Ovdje se nalazi primjer responsa koji odgovara URL queryu:
 
 ...?per_page=5&tags=2&lang=hr&with=ingredients,category,tags&diff_time=1493902343&page=2
 
+
+{
+    "meta": {
+        "currentPage": 1,
+        "totalItems": 1,
+        "itemsPerPage": 5,
+        "totalPages": 1
+    },
+    "data": [
+        {
+            "id": 9,
+            "status": "created",
+            "title": "Naslov jela 41 na hr jeziku",
+            "description": "Opis jela 41 na hr jeziku",
+            "ingredients": [
+                {
+                    "id": 2,
+                    "slug": "ingredient-2",
+                    "title": "Naslov sastojka 2 na hr jeziku"
+                },
+                {
+                    "id": 5,
+                    "slug": "ingredient-5",
+                    "title": "Naslov sastojka 5 na hr jeziku"
+                },
+                {
+                    "id": 10,
+                    "slug": "ingredient-10",
+                    "title": "Naslov sastojka 10 na hr jeziku"
+                }
+            ],
+            "category": null,
+            "tags": [
+                {
+                    "id": 1,
+                    "slug": "tag-1",
+                    "title": "Naslov taga 1 na hr jeziku"
+                },
+                {
+                    "id": 2,
+                    "slug": "tag-2",
+                    "title": "Naslov taga 2 na hr jeziku"
+                },
+                {
+                    "id": 3,
+                    "slug": "tag-3",
+                    "title": "Naslov taga 3 na hr jeziku"
+                }
+            ]
+        }
+    ],
+    "links": {
+        "prev": null,
+        "next": null,
+        "self": "http:\/\/127.0.0.1:8000\/meals?lang=hr&page=1&per_page=5&tags=2%2C3&with=ingredients%2Ccategory%2Ctags"
+
+__________________________________________________________________________________________________________________________
+
 Pojašnjenje nekih podataka iz responsa:</br>
         • id - id jela iz tablice meals</br>
         • title - naziv jela iz tablice prijevoda za jelo ovisno o parametru lang</br>
