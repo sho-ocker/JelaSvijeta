@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 
+
 class Category extends Model implements TranslatableContract
 {
     use Translatable;    
@@ -15,14 +16,14 @@ class Category extends Model implements TranslatableContract
     protected $hidden = ['created_at','updated_at','deleted_at','translations'];
 
 
-    public function meals()
-    {
+    public function meals(){
     	return $this->hasMany('App\Meal');
     }
 }
 
-class CategoryTranslation extends Model
-{    
+
+class CategoryTranslation extends Model{    
+
     public $timestamps = false;
     protected $fillable = ['title'];
 }

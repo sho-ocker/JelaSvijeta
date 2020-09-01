@@ -13,8 +13,7 @@ class QueryRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize(){
         return true;
     }
 
@@ -23,8 +22,8 @@ class QueryRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules(){
+
         return [
             'lang' => 'required|size:2|alpha',
             'per_page' => 'sometimes|integer',
@@ -37,8 +36,7 @@ class QueryRequest extends FormRequest
     }
 
 
-   protected function failedValidation(Validator $validator) 
-   { 
+   protected function failedValidation(Validator $validator){ 
         throw new HttpResponseException(response()->json($validator->errors()->all(), 422));
    }
 }

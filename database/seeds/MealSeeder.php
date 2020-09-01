@@ -14,11 +14,9 @@ class MealSeeder extends Seeder
      *
      * @return void
      */
-    public function run(){                           //SEEDANJE FAKE PODACIMA
-
+    public function run(){
 
         $ingredients = factory(Ingredient::class, 10)->create();
-
     	$tags = factory(Tag::class, 5)->create();
 
         factory(Meal::class, 10)->create()->each(function ($meal) use ($ingredients,$tags) { 
