@@ -17,7 +17,11 @@ class MealCollection extends ResourceCollection{
 
     public function toArray($request){
 
-        if($request->query('page')){
+        return ['data' => $this->collection];
+
+
+
+       /*  if($request->query('page')){
             $pr = $request->query('page');
             $prev = $request->fullUrl();
             $prev = Str::replaceFirst('page='.$pr,'page='.($pr-1), $prev);
@@ -49,12 +53,10 @@ class MealCollection extends ResourceCollection{
 
         }else{
             $currentPage = $request->query('page');
-        }
-    
+        } 
 
-        
         return [
-            'meta' => [
+             'meta' => [
                 'currentPage' => (int)$currentPage,
                 'totalItems' => $this->total(),
                 'itemsPerPage' => (int)$request->query('per_page'),
@@ -65,7 +67,7 @@ class MealCollection extends ResourceCollection{
                'prev' => $prev,
                'next' => $next,
                'self' => $self
-            ]
-        ];
+            ] 
+        ];*/
     }
 }
